@@ -1,0 +1,32 @@
+{
+  "name": "agm-backend-node",
+  "version": "1.0.0",
+  "description": "AGM backend node",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://harendrachohan@github.com/harendrachohan/AGM-backend-node.git"
+  },
+  "author": "Harendra Singh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harendrachohan/AGM-backend-node/issues"
+  },
+  "homepage": "https://github.com/harendrachohan/AGM-backend-node#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "helmet": "^6.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.1",
+    "morgan": "^1.10.0",
+    "path": "^0.12.7"
+  }
+}
