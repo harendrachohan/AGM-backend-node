@@ -2,16 +2,16 @@ const express = require('express');
 const compression = require('compression');
 const morgan = require('morgan');
 const helmet = require('helmet');
-const env = require('dotenv');
+const env = require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
-// const routerConfig = require('./routers/index.router');
+const routerConfig = require('./routers/index.router');
 
 const app = express();
 
-env.config({
-    path: '.env'
-})
+// env.config({
+//     path: '.env'
+// })
 
 /**DB Connection**/
 const dbConnection = require('./config/db');
@@ -36,7 +36,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
 
 /** Routes */
-// routerConfig(app)
+routerConfig(app)
 
 const PORT = process.env.PORT;
 

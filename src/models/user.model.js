@@ -2,27 +2,15 @@ const mongoose =  require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const jwtPrivateKey = process.env.JWT_TOKEN_KEY;
-const jwtExpiresIn = process.env.JWT_EXPIRES_IN;
 
-const masterFieldsSchema = new Schema({
-    name: {
-        type: String,
-    },
-    type: {
-        type: String,
-    },    
-    required: {
-        type: Boolean,
-    },    
-    masking: {
-        type: Boolean,
-    },
-});
 
 const usersSchema = new Schema({
     name: { 
+        type: String,
+        required: true,
+    },
+    username: {
         type: String,
         required: true,
     },
@@ -50,7 +38,6 @@ const usersSchema = new Schema({
     },
     dateOfBirth: {
         type: Number,
-        required: true,
         trim: true,
     },    
     gotra:{
@@ -59,7 +46,6 @@ const usersSchema = new Schema({
     },        
     education:{
         type:String,
-        required:true,
     },
     occupation:{
         type:String,
@@ -67,7 +53,6 @@ const usersSchema = new Schema({
     },
     interests: {
         type: Array,
-        required: true,
     },
     fatherName: { 
         type: String,
@@ -94,7 +79,6 @@ const usersSchema = new Schema({
         enum: ['frontend','backend','both',],
         default: 'frontend',
     },        
-    masterFields: [masterFieldsSchema],
     createdAt: {
         type: Number,
     },

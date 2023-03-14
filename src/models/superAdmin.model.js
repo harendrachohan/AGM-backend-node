@@ -1,7 +1,9 @@
 const mongoose =  require('mongoose');
 const Schema = mongoose.Schema;
+const env = require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
 
 const jwtPrivateKey = process.env.JWT_TOKEN_KEY;
 const jwtExpiresIn = process.env.JWT_EXPIRES_IN;
@@ -33,7 +35,11 @@ const superAdminSchema = new Schema({
     isActive: {
         type: Boolean,
         default: true
+    },    
+    lastLogin: {
+        type: Number,
     }
+    
 },
 { 
     timestamps: true,
@@ -52,6 +58,7 @@ superAdminSchema.methods.passwordCompare = async function (password) {
 
 superAdminSchema.methods.generateSignedToken = function () {
     const payload = { id: this._id };
+    console.log("jwtPrivateKey",jwtPrivateKey)
     return jwt.sign(payload, jwtPrivateKey);
 }
 const superAdmin = mongoose.model('superAdmins', superAdminSchema);
