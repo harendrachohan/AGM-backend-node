@@ -5,6 +5,31 @@ const jwt = require('jsonwebtoken');
 const jwtPrivateKey = process.env.JWT_TOKEN_KEY;
 
 
+const masterFieldsSchema = {
+    name: {
+        type: String,
+    },
+    value: {
+        type: String,
+    },
+    masterFieldId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'masterFields',
+    },
+    type: {
+        type: String,
+        select:false,
+    },    
+    required: {
+        type: Boolean,
+        select:false,
+    },    
+    masking: {
+        type: Boolean,
+        select:false,
+    }
+};
+
 const usersSchema = new Schema({
     name: { 
         type: String,
@@ -78,7 +103,10 @@ const usersSchema = new Schema({
         type: String,        
         enum: ['frontend','backend','both',],
         default: 'frontend',
-    },        
+    },
+    masterFields: {
+        type: [masterFieldsSchema]
+    },
     createdAt: {
         type: Number,
     },

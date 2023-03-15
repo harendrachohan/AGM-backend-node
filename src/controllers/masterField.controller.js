@@ -65,7 +65,7 @@ exports.getById = catchAsync(async(req, res, next) => {
 
     return res.status(200).send({ 
         code: 200,
-        message: "Get master field detils.",
+        message: "Get master field details.",
         data: field
     });
 

@@ -3,6 +3,7 @@ const AppError = require('../utils/appError');
 const { globalErrorHandler } = require('../utils/errorHandler')
 const authRoutes = require('./auth.router');
 const masterFieldRoutes = require('./masterField.router');
+const userRoutes = require('./user.router');
 
 const app = express();
 
@@ -13,6 +14,7 @@ function routerConfig(app) {
   })
   app.use("/api/v1/auth/", authRoutes);
   app.use("/api/v1/super-admin/master-field", masterFieldRoutes);
+  app.use("/api/v1/profile/", userRoutes);
 
   app.all('*', function (req, res, next) {
     return next(new AppError(`Requested url ${req.originalUrl} not found!`, 404))
