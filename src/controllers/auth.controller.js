@@ -32,7 +32,9 @@ exports.superAdminLogin = catchAsync(async (req, res, next) => {
 });
 
 
-exports.superAdminGet = catchAsync(async (req, res, next) => {
+
+
+exports.login = catchAsync(async (req, res, next) => {
     return res.status(200).send({
         code: 200,
         message: "Get successfully.",

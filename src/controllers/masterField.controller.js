@@ -8,11 +8,11 @@ const AppError = require('../utils/appError');
  * @param request body
  * @return json response
  */
-exports.create = catchAsync(async(req, res, next) => {
+exports.add = catchAsync(async(req, res, next) => {
 
     let body = { ...req.body};
     const masterField = await MasterField.findOne({ name: req.body.name});
-    if(masterField) return next(new AppError("Field already exit", 400));
+    if(masterField) return next(new AppError("Field already exist", 400));
 
     const newField = await MasterField.create(body);
 
@@ -58,10 +58,9 @@ exports.create = catchAsync(async(req, res, next) => {
 */ 
 exports.getById = catchAsync(async(req, res, next) => {
 
-    if(!req.params.id) return next(new AppError(global.messages.areaIdRequired, 400));
+    if(!req.params.id) return next(new AppError("Field id is required.", 400));
 
     let filters = { '_id': req.params.id, deletedAt: null};
-
     const field = await MasterField.findOne(filters);
 
     return res.status(200).send({ 
@@ -73,36 +72,35 @@ exports.getById = catchAsync(async(req, res, next) => {
 });
 
 /**
- * Update Area Data
+ * Update Master Data Fields
  * @param req
  * @returns res
  */
  exports.update = catchAsync(async (req, res, next) => {
 
-    if(!req.params.id) return next(new AppError(global.messages.areaIdRequired, 400));
-    const area = await findByIdAndUpdate(Area, { '_id': req.params.id }, { ...req.body });
+    if(!req.params.id) return next(new AppError("Field id is required.", 400));
+    const fieldData = await MasterField.findByIdAndUpdate({ '_id': req.params.id }, { ...req.body });
 
-    if (!area) return next(new AppError(global.messages.areaNotExits, 400))
-    
-    res.status(200).send({
+    if (!fieldData) return next(new AppError("Field not found", 400));    
+    return res.status(200).send({
         code: 200,
-        message: global.messages.areaUpdated,
-        data: area
+        message: "Field update successfully.",
+        data: fieldData
     });
 })
 
 /**
- * Soft Delete Area 
+ * Soft Delete Field 
  */
- exports.deleteArea = catchAsync(async (req, res, next) => {
+ exports.delete = catchAsync(async (req, res, next) => {
 
-    if(!req.params.id) return next(new AppError(global.messages.areaIdRequired, 400));
+    if(!req.params.id) return next(new AppError("Field id is required.", 400));
 
-    await softDelete(Area, { '_id': req.params.id });
+    await MasterField.deleteOne({ '_id': req.params.id });
 
     res.status(200).json({
         code: 200,
-        message: global.messages.areaDeleted,
+        message: "Field deleted successfully",
     })
 })
 
