@@ -1,14 +1,13 @@
 {
-  "version": 2,
-  "builds": [{ "src": "index.js", "use": "@now/node-server" }],
-  "routes": [
-    {
-      "src": "/api/v1/auth/(.*)",
-      "dest": "/index.js"
-    },
-    {
-      "src": "/api/v1/admin/master-field/(.*)",
-      "dest": "/index.js"
-    }
-  ]
-}
+    "name": "node-server-express-example",
+    "version": 2,
+    "builds": [
+      {
+        "src": "src/index.js",
+        "use": "@now/node-server"
+      }
+    ],
+    "routes": [
+      { "src": "/.*", "dest": "src/index.js" }
+    ]
+  }
