@@ -13,7 +13,7 @@ function routerConfig(app) {
       res.send("Welcome to AGM App V1.0.0")
   })
   app.use("/api/v1/auth/", authRoutes);
-  app.use("/api/v1/super-admin/master-field", masterFieldRoutes);
+  app.use("/api/v1/admin/master-field", masterFieldRoutes);
   app.use("/api/v1/profile/", userRoutes);
 
   app.all('*', function (req, res, next) {

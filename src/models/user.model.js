@@ -31,11 +31,11 @@ const masterFieldsSchema = {
 };
 
 const usersSchema = new Schema({
-    name: { 
+    username: {
         type: String,
         required: true,
     },
-    username: {
+    name: { 
         type: String,
         required: true,
     },
@@ -98,16 +98,18 @@ const usersSchema = new Schema({
     whatsapp: { 
         type: String,
         select: false
-    },    
-    permission: { 
-        type: String,        
-        enum: ['frontend','backend','both',],
-        default: 'frontend',
+    },
+    sharedCount: { 
+        type: Number,
+        select: false
     },
     masterFields: {
         type: [masterFieldsSchema]
     },
     createdAt: {
+        type: Number,
+    },
+    lastLogin: {
         type: Number,
     },
     updatedAt: {

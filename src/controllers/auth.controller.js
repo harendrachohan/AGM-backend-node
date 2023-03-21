@@ -1,23 +1,27 @@
-const SuperAdmin = require('../models/superAdmin.model');
+const moment = require('moment');
+const Admin = require('../models/admin.model');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 /**
- * Super admin login
+ * Super admin and admin login
  * @param email, password
  * @returns json response
  */
-exports.superAdminLogin = catchAsync(async (req, res, next) => {
+exports.adminLogin = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) return next(new AppError('login credentials are missing.', 400));
 
-    let user = await SuperAdmin.findOne( {'email':email}).select('+password')
+    let user = await Admin.findOne( {'email':email}).select('+password')
     
     if (!user) return next(new AppError("User not found.", 400));
     if(!user.password) return next(new AppError("invalid Credentials.", 400));
 
     const passwordCheck = await user.passwordCompare(password);
-    if(!passwordCheck) return next(new AppError("invalid Credentials.", 400))
+    if(!passwordCheck) return next(new AppError("invalid Credentials.", 400));
+    
+    let curentTimestamp = moment().utc();    
+    let userData = await Admin.findOneAndUpdate({ _id: user.id}, { lastLogin: curentTimestamp });
 
     const token = await user.generateSignedToken();
     user.password = null;
@@ -31,13 +35,3 @@ exports.superAdminLogin = catchAsync(async (req, res, next) => {
         
 });
 
-
-
-
-exports.login = catchAsync(async (req, res, next) => {
-    return res.status(200).send({
-        code: 200,
-        message: "Get successfully.",
-    });
-        
-});

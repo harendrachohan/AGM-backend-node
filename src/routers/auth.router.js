@@ -4,7 +4,6 @@ const {superAdminAuth,} = require('../middlewares/jwtMiddleware')
 const router = express.Router();
 
 //login APIS
-router.post('/super-admin/login', authController.superAdminLogin);
-router.post('/login/', authController.login);
+router.post('/admin/login', authController.adminLogin);
 
 module.exports = router

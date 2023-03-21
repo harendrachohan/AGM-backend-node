@@ -1,26 +1,16 @@
 const mongoose =  require('mongoose');
 const Schema = mongoose.Schema;
 
-const logsSchema = new Schema({      
+const profileShareSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
         select: false
     },
-    adminId: {
+    sharedWith: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "admins",
+        ref: "users",
         select: false
-    },
-    title: { 
-        type: String, 
-    },
-    description: { 
-        type: String, 
-    },   
-    logData: { 
-        type: String,
-        default: null,
     },        
     createdAt: {
         type: Number,
@@ -30,5 +20,5 @@ const logsSchema = new Schema({
     timestamps: true,
     versionKey: false 
 });
-const Log = mongoose.model('logs', logsSchema);
-module.exports = Log;
+const ProfileShared = mongoose.model('profileShared', profileShareSchema);
+module.exports = ProfileShared;

@@ -21,6 +21,22 @@ const adminSchema = new Schema({
         type: String,
         trim: true,    
     },
+    type: { 
+        type: Number,     
+        enum: [1,2],
+        default: 2,  
+    },// 1 => Super admin, 2=> Admin        
+    permission: { 
+        type: String,        
+        enum: ['frontend','backend','both',],
+        default: 'frontend',
+    },        
+    modules: { 
+        type: Array,        
+    },    
+    lastLogin: {
+        type: Number,
+    },
     createdAt: {
         type: Number,
     },
