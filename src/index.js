@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const env = require('dotenv').config();
 const cors = require('cors');
 const path = require('path');
-const routerConfig = require('./src/routers/index.router');
+const routerConfig = require('./routers/index.router');
 
 const app = express();
 
@@ -14,7 +14,7 @@ const app = express();
 // })
 
 /**DB Connection**/
-const dbConnection = require('./src/config/db');
+const dbConnection = require('./config/db');
 dbConnection.connect();
 
 var options = {
