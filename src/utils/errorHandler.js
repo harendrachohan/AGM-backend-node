@@ -18,5 +18,14 @@ function globalErrorHandler(err, req, res, next) {
     return errorResponseHandler({ res, name, message, status, statusCode })
 }
 
+function AppError(message, statusCode, next) {    
+    let status = `${statusCode}`.startsWith('4') ? false : 'error';    
+    return {
+        status: status,
+        message, message,
+        statusCode, statusCode
+    }
+}
 
-module.exports = { globalErrorHandler };
+
+module.exports = { globalErrorHandler, AppError};

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/admin.model');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
+const {AppError} = require('../utils/errorHandler');
 const env = require('dotenv').config();
 const jwtToken = process.env.JWT_TOKEN_KEY;
 /**

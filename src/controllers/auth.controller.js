@@ -1,7 +1,9 @@
 const moment = require('moment');
 const Admin = require('../models/admin.model');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
+// const AppError = require('../utils/appError');
+
+const {AppError } = require('../utils/errorHandler')
 
 /**
  * Super admin and admin login
