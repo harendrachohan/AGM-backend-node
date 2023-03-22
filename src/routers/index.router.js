@@ -14,7 +14,7 @@ function routerConfig(app) {
   })
   app.use("/api/v1/auth/", authRoutes);
   app.use("/api/v1/admin/master-field", masterFieldRoutes);
-  app.use("/api/v1/profile/", userRoutes);
+  app.use("/api/v1/admin/profile/", userRoutes);
 
   app.all('*', function (req, res, next) {
     return next( AppError(`Requested url ${req.originalUrl} not found!`, 404))

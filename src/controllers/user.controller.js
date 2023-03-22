@@ -1,3 +1,4 @@
+const moment = require('moment');
 const User = require('..//models/user.model');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
@@ -70,7 +71,7 @@ exports.getById = catchAsync(async(req, res, next) => {
 });
 
 /**
- * Update Master Data Fields
+ * Update User profile
  * @param req
  * @returns res
  */
@@ -83,6 +84,25 @@ exports.getById = catchAsync(async(req, res, next) => {
     return res.status(200).send({
         code: 200,
         message: "profile updated successfully.",
+        data: profile
+    });
+})
+
+
+/**
+ * Soft Delete Profile
+ * @param req
+ * @returns res
+ */
+exports.delete = catchAsync(async (req, res, next) => {
+
+    if(!req.params.id) return next(new AppError("user id is required.", 400));
+    const profile = await User.findByIdAndUpdate({ '_id': req.params.id }, {deletedAt:moment().valueOf()});
+
+    if (!profile) return next(new AppError("User not found", 400));    
+    return res.status(200).send({
+        code: 200,
+        message: "profile delete successfully.",
         data: profile
     });
 })
