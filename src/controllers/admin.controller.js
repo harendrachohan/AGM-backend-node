@@ -1,4 +1,5 @@
 const moment = require('moment');
+const UsernameGenerator = require('username-generator');
 const Admin = require('../models/admin.model');
 const catchAsync = require('../utils/catchAsync');
 const { AppError } = require('../utils/errorHandler')
@@ -10,19 +11,20 @@ const { AppError } = require('../utils/errorHandler')
  * @return json response
  */
 exports.add = catchAsync(async(req, res, next) => {
-    let {name, username, email, password, modules, permission} = req.body;
+    let {name, email, password, modules, permission} = req.body;
 
     const userData = await Admin.findOne({ username: username});
     if(userData) return next(new AppError("username already exist", 400));
-
+    
+    
     let body = {
         name,
-        username,
         email,
         password,
         modules,
         permission
     }
+    body.username = await UsernameGenerator.generateUsername("-");
 
     const admin = await Admin.create(body);
 
@@ -86,9 +88,18 @@ exports.getById = catchAsync(async(req, res, next) => {
  */
  exports.update = catchAsync(async (req, res, next) => {
 
-    if(!req.params.id) return next(new AppError("user id is required.", 400));
-    const profile = await Admin.findByIdAndUpdate({ '_id': req.params.id }, { ...req.body });
+    let {name, email, password, modules, permission} = req.body;
+    if(!req.params.id) return next(new AppError("user id is required.", 400));   
+    
+    let updateBody = {
+        name,
+        email,
+        password,
+        modules,
+        permission
+    }
 
+    const profile = await Admin.findByIdAndUpdate({ '_id': req.params.id }, updateBody);
     if (!profile) return next(new AppError("User not found", 400));    
     return res.status(200).send({
         code: 200,

@@ -57,8 +57,7 @@ exports.adminAuth  = catchAsync(async (req, res, next) => {
 
         //verify token wheather user exist or not
         let userData = await Admin.findById(decoded.id);        
-        if(userData == null) return next(new AppError("user unauthenticated", 401));        
-        if(userData.type != 2) return next(new AppError("Forbidden", 403));
+        if(userData == null) return next(new AppError("user unauthenticated", 401));
 
         req.user = userData;
 
