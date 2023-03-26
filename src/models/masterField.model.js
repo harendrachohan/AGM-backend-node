@@ -29,5 +29,5 @@ const masterFieldsSchema = new Schema({
     versionKey: false 
 });
 
-const MasterField = mongoose.model('masterFields', masterFieldsSchema);
+const MasterField = mongoose.model('master-fields', masterFieldsSchema);
 module.exports = MasterField;

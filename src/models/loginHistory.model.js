@@ -31,5 +31,5 @@ const loginHistorySchema = new Schema({
     timestamps: true,
     versionKey: false 
 });
-const LoginHistory = mongoose.model('loginHistory', loginHistorySchema);
+const LoginHistory = mongoose.model('login-histories', loginHistorySchema);
 module.exports = LoginHistory;

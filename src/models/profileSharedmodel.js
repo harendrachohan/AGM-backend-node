@@ -20,5 +20,5 @@ const profileShareSchema = new Schema({
     timestamps: true,
     versionKey: false 
 });
-const ProfileShared = mongoose.model('profileShared', profileShareSchema);
+const ProfileShared = mongoose.model('profile-shared', profileShareSchema);
 module.exports = ProfileShared;

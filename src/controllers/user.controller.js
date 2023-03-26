@@ -137,3 +137,33 @@ exports.delete = catchAsync(async (req, res, next) => {
 })
 
 
+
+/**
+ * Get all Profile 
+ * @param NA
+ * @return json response
+ */ 
+exports.getAllProfile = catchAsync(async(req, res, next) => {
+
+    let filters = {};
+    const page =(req.query.page) ? parseInt(req.query.page): 1;
+    const limit = (req.query.limit)? parseInt(req.query.limit):10;
+    const skipIndex = (page - 1) * limit;
+
+    if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
+    if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
+
+    let taskArray = [ User.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
+        taskArray.push(User.find(filters).count())
+
+    let [profile, total = null] = await Promise.all(taskArray);
+
+    return res.status(200).send({
+        code: 200, 
+        message: "Get all profile successfully.",
+        data: profile,
+        total: total
+    });
+
+});
+
