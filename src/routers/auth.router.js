@@ -6,6 +6,6 @@ const router = express.Router();
 //login APIS
 router.post('/admin/login', authController.adminLogin);
 router.post('/login', authController.login);
-router.post('/logout', authController.login);
+// router.post('/logout', authController.login);
 
 module.exports = router
