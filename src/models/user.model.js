@@ -60,6 +60,13 @@ const usersSchema = new Schema({
             default: 'default-user.png'
         },
         url: { type: String },
+    },            
+    profileDoc: {
+        fileName: {
+            type: String, 
+            default: 'default-user.png'
+        },
+        url: { type: String },
     },
     dateOfBirth: {
         type: Number,
