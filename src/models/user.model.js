@@ -69,7 +69,7 @@ const usersSchema = new Schema({
         url: { type: String },
     },
     dateOfBirth: {
-        type: Number,
+        type: Date,
         trim: true,
     },    
     gotra:{
@@ -109,6 +109,9 @@ const usersSchema = new Schema({
     sharedCount: { 
         type: Number,
         select: false
+    },
+    budget: {
+        type: String,
     },
     masterFields: {
         type: [masterFieldsSchema]
