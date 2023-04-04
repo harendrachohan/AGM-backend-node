@@ -88,29 +88,32 @@ const usersSchema = new Schema({
     },
     fatherName: { 
         type: String,
-        select: false
     },
     motherName: { 
         type: String,
-        select: false
-    },
-    address: { 
-        type: String,
-        select: false
     },
     phone: { 
         type: String,
-        select: false
     },
     whatsapp: { 
         type: String,
-        select: false
     },
     sharedCount: { 
         type: Number,
-        select: false
     },
     budget: {
+        type: String,
+    },    
+    addressLine: { 
+        type: String,
+    },        
+    state: { 
+        type: String,
+    },    
+    county: { 
+        type: String,
+    },    
+    pinCode: { 
         type: String,
     },
     masterFields: {
