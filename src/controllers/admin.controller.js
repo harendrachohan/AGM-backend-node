@@ -42,7 +42,7 @@ exports.add = catchAsync(async(req, res, next) => {
  */ 
  exports.getAll = catchAsync(async(req, res, next) => {
 
-    let filters = {};
+    let filters = {deletedAt:null};
     const page =(req.query.page) ? parseInt(req.query.page): 1;
     const limit = (req.query.limit)? parseInt(req.query.limit):10;
     const skipIndex = (page - 1) * limit;
