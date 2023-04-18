@@ -13,6 +13,10 @@ const masterFieldsSchema = new Schema({
     },    
     masking: {
         type: Boolean,
+    },    
+    preDefine: {
+        type: Boolean,
+        default: false,
     },
     createdAt: {
         type: Number,
