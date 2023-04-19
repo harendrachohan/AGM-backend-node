@@ -109,8 +109,11 @@ const usersSchema = new Schema({
     },        
     state: { 
         type: String,
-    },    
-    county: { 
+    },        
+    city: { 
+        type: String,
+    },
+    country : { 
         type: String,
     },    
     pinCode: { 
