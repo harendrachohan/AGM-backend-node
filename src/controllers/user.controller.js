@@ -172,3 +172,47 @@ exports.getAllProfile = catchAsync(async(req, res, next) => {
 
 });
 
+
+
+
+/**
+ * Admin report 
+ * @param NA
+ * @return json response
+ */ 
+exports.report = catchAsync(async(req, res, next) => {
+
+    let malefilters = {gender:"male"};
+    let femalefilters = {gender:"female"};
+    let totalsharedCount =0;
+    let pipleline =[{
+        $group: {
+           _id: "null",
+           totalsharedCount: { $sum:"$sharedCount" }
+        }
+      }]
+
+    let taskArray = [
+        User.find(malefilters).countDocuments(),
+        User.find(femalefilters).countDocuments(),
+        User.find({}).countDocuments(),
+        User.aggregate(pipleline)
+    ];
+
+    let [maleCount=0, femaleCount =0, totalUsers=0, totalShared] = await Promise.all(taskArray);
+    if(totalShared.length) totalsharedCount = totalShared[0].totalsharedCount;
+    let data = {
+        maleCount,
+        femaleCount,
+        totalUsers,
+        totalsharedCount,
+
+    }
+
+    return res.status(200).send({
+        code: 200, 
+        message: "Get report successfully.",
+        data: data
+    });
+
+});

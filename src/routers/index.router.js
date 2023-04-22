@@ -4,6 +4,7 @@ const { globalErrorHandler,AppError } = require('../utils/errorHandler')
 const authRoutes = require('./auth.router');
 const masterFieldRoutes = require('./masterField.router');
 const userRoutes = require('./user.router');
+const reportRoutes = require('./report.router');
 const adminRoutes = require('./admin.router');
 
 const app = express();
@@ -17,6 +18,7 @@ function routerConfig(app) {
   app.use("/api/v1/admin/master-field", masterFieldRoutes);
   app.use("/api/v1/admin/profile/", userRoutes);
   app.use("/api/v1/admin/role/", adminRoutes);
+  app.use("/api/v1/admin/report/", reportRoutes);
   app.use("/api/v1/user/", userRoutes);
 
   app.all('*', function (req, res, next) {
