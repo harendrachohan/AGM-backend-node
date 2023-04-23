@@ -13,8 +13,8 @@ const { AppError } = require('../utils/errorHandler')
 exports.add = catchAsync(async(req, res, next) => {
     let {name, email, password, modules, permission} = req.body;
 
-    const userData = await Admin.findOne({ username: username});
-    if(userData) return next(new AppError("username already exist", 400));
+    const userData = await Admin.findOne({ email: email});
+    if(userData) return next(new AppError("email already exist", 400));
     
     
     let body = {
