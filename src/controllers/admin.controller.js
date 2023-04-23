@@ -24,7 +24,9 @@ exports.add = catchAsync(async(req, res, next) => {
         modules,
         permission
     }
-    body.username = await UsernameGenerator.generateUsername("-");
+    
+    const count = await Admin.findOne({}).countDocuments();
+    body.username =`admin_agm_${count}`;
 
     const admin = await Admin.create(body);
 

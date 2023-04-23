@@ -17,8 +17,9 @@ exports.add = catchAsync(async(req, res, next) => {
     let body = { ...req.body};
     const userData = await User.findOne({ phone: body.phone});
     if(userData) return next(new AppError("user already exist", 400));
-
-    body.username = await UsernameGenerator.generateUsername("-");
+    
+    const count = await User.findOne({}).countDocuments();
+    body.username =`agm_${count}`;
 
     const profile = await User.create(body);
 
