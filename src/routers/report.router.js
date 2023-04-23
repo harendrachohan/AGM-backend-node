@@ -6,6 +6,8 @@ const router = express.Router();
 //Super admin and admin middlware
 router.use(adminAuth);
 router.get('/', userController.report);
+router.get('/login-history', userController.getLoginHistory);
+
 
 
 module.exports = router

@@ -3,6 +3,7 @@ const UsernameGenerator = require('username-generator');
 const User = require('..//models/user.model');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
+const LoginHistory = require('../models/loginHistory.model')
 const { AppError } = require('../utils/errorHandler');
 
 
@@ -213,6 +214,30 @@ exports.report = catchAsync(async(req, res, next) => {
         code: 200, 
         message: "Get report successfully.",
         data: data
+    });
+
+});
+
+
+exports.getLoginHistory = catchAsync(async(req, res, next) => {
+
+    let filters = {deletedAt:null};
+    const page =(req.query.page) ? parseInt(req.query.page): 1;
+    const limit = (req.query.limit)? parseInt(req.query.limit):10;
+    const skipIndex = (page - 1) * limit;
+
+    if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
+
+    let taskArray = [ LoginHistory.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
+        taskArray.push(LoginHistory.find(filters).count())
+
+    let [profile, total = null] = await Promise.all(taskArray);
+
+    return res.status(200).send({
+        code: 200, 
+        message: "Get all login History successfully.",
+        data: profile,
+        total: total
     });
 
 });

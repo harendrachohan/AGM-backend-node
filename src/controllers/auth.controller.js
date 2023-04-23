@@ -81,7 +81,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
 const loginHistory = async(req, user, userType) => {
     
-    let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    let ip = req.ip;
     let origin = req.headers.origin || "";
     let body ={
         userType,
