@@ -10,11 +10,11 @@ const loginHistorySchema = new Schema({
     },
     description: { 
         type: String, 
-    },  
-    userId: {        
-        type: String,
-        select: false
-    },    
+    },
+    adminId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "admins",
+    },   
     userType: {        
         type: Number,  
         enum: [1,2,3]

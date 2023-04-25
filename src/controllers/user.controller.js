@@ -44,7 +44,8 @@ exports.add = catchAsync(async(req, res, next) => {
 
     if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
 
-    let taskArray = [ User.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
+    // let taskArray = [ User.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
+    let taskArray = [ User.find(filters).sort({"_id":-1})];
         taskArray.push(User.find(filters).count())
 
     let [profile, total = null] = await Promise.all(taskArray);
@@ -229,7 +230,7 @@ exports.getLoginHistory = catchAsync(async(req, res, next) => {
 
     if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
 
-    let taskArray = [ LoginHistory.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
+    let taskArray = [ LoginHistory.find(filters).sort({"_id":-1})];
         taskArray.push(LoginHistory.find(filters).count())
 
     let [profile, total = null] = await Promise.all(taskArray);

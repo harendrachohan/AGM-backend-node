@@ -11,7 +11,7 @@ const { AppError } = require('../utils/errorHandler')
  * @return json response
  */
 exports.add = catchAsync(async(req, res, next) => {
-    let {name, email, password, modules, permission} = req.body;
+    let {name, phone, email, password, modules, permission} = req.body;
 
     const userData = await Admin.findOne({ email: email});
     if(userData) return next(new AppError("email already exist", 400));
@@ -20,6 +20,7 @@ exports.add = catchAsync(async(req, res, next) => {
     let body = {
         name,
         email,
+        phone,
         password,
         modules,
         permission
@@ -51,7 +52,8 @@ exports.add = catchAsync(async(req, res, next) => {
 
     if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
 
-    let taskArray = [ Admin.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
+    // let taskArray = [ Admin.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
+    let taskArray = [ Admin.find(filters).sort({"_id":-1})];
         taskArray.push(Admin.find(filters).count())
 
     let [profile, total = null] = await Promise.all(taskArray);

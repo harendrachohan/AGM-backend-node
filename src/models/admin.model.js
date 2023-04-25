@@ -20,6 +20,9 @@ const adminSchema = new Schema({
     password: { 
         type: String,
         trim: true,    
+    },    
+    phone: { 
+        type: String,
     },
     type: { 
         type: Number,     

@@ -86,7 +86,7 @@ const loginHistory = async(req, user, userType) => {
     let origin = req.headers.origin || "";
     let body ={
         userType,
-        userId : user._id,
+        adminId : user._id,
         ip,
         origin
     } 
