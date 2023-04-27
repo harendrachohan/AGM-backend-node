@@ -103,6 +103,7 @@ const usersSchema = new Schema({
     },
     budget: {
         type: String,
+        default:0
     },    
     addressLine: { 
         type: String,

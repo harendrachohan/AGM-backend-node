@@ -101,12 +101,13 @@ exports.getById = catchAsync(async(req, res, next) => {
         education,
         occupation,
         interests,
+        budget,
         fatherName,
         motherName,
         address,
         phone,
         whatsapp,
-        masterFields
+        masterFields,
     };
 
     if(!req.params.id) return next(new AppError("user id is required.", 400));
@@ -230,7 +231,7 @@ exports.getLoginHistory = catchAsync(async(req, res, next) => {
 
     if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
 
-    let taskArray = [ LoginHistory.find(filters).sort({"_id":-1})];
+    let taskArray = [ LoginHistory.find(filters).sort({"_id":-1}).populate('adminId')];
         taskArray.push(LoginHistory.find(filters).count())
 
     let [profile, total = null] = await Promise.all(taskArray);
