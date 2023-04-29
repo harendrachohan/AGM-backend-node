@@ -87,13 +87,17 @@ exports.login = catchAsync(async (req, res, next) => {
 
 const loginHistory = async(req, user, userType) => {
     
-    let ip = req.socket.remoteAddress;
-    // let ip = req.ip;
+    console.log(req.ip);
+
+console.log(req.headers['x-forwarded-for']);
+console.log(req.connection.remoteAddress);
+console.log(req.socket.remoteAddress);
+
     let origin = req.headers.origin || "";
     let body ={
         userType,
         adminId : user._id,
-        ip,
+        ip:req.ip,
         origin
     } 
     return await LoginHistory.create(body);

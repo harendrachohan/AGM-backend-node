@@ -34,6 +34,8 @@ app.use(express.json({ limit: '50mb' }));
 /** Parse the request */
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
+app.set('trust proxy', true);
+
 
 /** Routes */
 routerConfig(app)
