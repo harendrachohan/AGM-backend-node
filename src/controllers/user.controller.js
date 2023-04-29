@@ -87,7 +87,7 @@ exports.getById = catchAsync(async(req, res, next) => {
  exports.update = catchAsync(async (req, res, next) => {
 
     
-    let {name, email, password, gender, dateOfBirth, gotra, education, occupation, interests,fatherName,motherName,address,phone, whatsapp, masterFields} = req.body;
+    let {name, email, password, gender, dateOfBirth, gotra, education, occupation, interests,fatherName, budget,motherName,address,phone, whatsapp, masterFields} = req.body;
 
     if(!req.params.id) return next(new AppError("user id is required.", 400));
 
@@ -244,3 +244,4 @@ exports.getLoginHistory = catchAsync(async(req, res, next) => {
     });
 
 });
+

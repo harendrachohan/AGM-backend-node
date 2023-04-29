@@ -1,5 +1,4 @@
 const moment = require('moment');
-const UsernameGenerator = require('username-generator');
 const Admin = require('../models/admin.model');
 const catchAsync = require('../utils/catchAsync');
 const { AppError } = require('../utils/errorHandler')
@@ -13,7 +12,7 @@ const { AppError } = require('../utils/errorHandler')
 exports.add = catchAsync(async(req, res, next) => {
     let {name, phone, email, password, modules, permission} = req.body;
 
-    const userData = await Admin.findOne({ email: email});
+    const userData = await Admin.findOne({ email: email, deletedAt:null});
     if(userData) return next(new AppError("email already exist", 400));
     
     
@@ -45,7 +44,7 @@ exports.add = catchAsync(async(req, res, next) => {
  */ 
  exports.getAll = catchAsync(async(req, res, next) => {
 
-    let filters = {deletedAt:null};
+    let filters = {deletedAt:null, type: 2};
     const page =(req.query.page) ? parseInt(req.query.page): 1;
     const limit = (req.query.limit)? parseInt(req.query.limit):10;
     const skipIndex = (page - 1) * limit;
@@ -98,10 +97,11 @@ exports.getById = catchAsync(async(req, res, next) => {
     let updateBody = {
         name,
         email,
-        password,
         modules,
         permission
     }
+
+    if(password && password != '') updateBody.password = password;
 
     const profile = await Admin.findByIdAndUpdate({ '_id': req.params.id }, updateBody);
     if (!profile) return next(new AppError("User not found", 400));    
