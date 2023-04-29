@@ -24,6 +24,9 @@ exports.adminLogin = catchAsync(async (req, res, next) => {
     const passwordCheck = await user.passwordCompare(password);
     if(!passwordCheck) return next(new AppError("invalid Credentials.", 400));
     
+    const permissionArray = ['backend','both'];
+    if (user.type == 2 && (!permissionArray.includes(user.permission))) return next(new AppError("User not have permissions.", 401));
+    
     let curentTimestamp = moment().utc();    
     let userData = await Admin.findOneAndUpdate({ _id: user.id}, { lastLogin: curentTimestamp });
 
@@ -52,16 +55,19 @@ exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) return next(new AppError('login credentials are missing.', 400));
 
-    let user = await User.findOne( {'email':email}).select('+password')
+    let user = await Admin.findOne( {'email': email}).select('+password')
     
     if (!user) return next(new AppError("User not found.", 400));
     if(!user.password) return next(new AppError("invalid Credentials.", 400));
 
     const passwordCheck = await user.passwordCompare(password);
     if(!passwordCheck) return next(new AppError("invalid Credentials.", 400));
+
+    const permissionArray = ['frontend','both'];
+    if (user.type == 2 && (!permissionArray.includes(user.permission))) return next(new AppError("User not have permissions.", 401));
     
     let curentTimestamp = moment().utc();    
-    let userData = await User.findOneAndUpdate({ _id: user.id}, { lastLogin: curentTimestamp });
+    let userData = await Admin.findOneAndUpdate({ _id: user.id}, { lastLogin: curentTimestamp });
 
     const token = await user.generateSignedToken();
     user.password = null;
