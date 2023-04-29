@@ -161,6 +161,11 @@ exports.getAllProfile = catchAsync(async(req, res, next) => {
     if(req.query.age){
         filters.age = {$lt:req.query.age, $gt:req.query.age}
     }
+    if(req.query.interests){
+        let interests = req.query.interests.split(',');
+        filters.interests = {$in:interests}
+    }
+    
 
     let taskArray = [ User.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
         taskArray.push(User.find(filters).count())
