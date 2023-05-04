@@ -1,4 +1,5 @@
 const moment = require('moment');
+const bcrypt = require('bcrypt');
 const Admin = require('../models/admin.model');
 const catchAsync = require('../utils/catchAsync');
 const { AppError } = require('../utils/errorHandler')
@@ -101,7 +102,7 @@ exports.getById = catchAsync(async(req, res, next) => {
         permission
     }
 
-    if(password && password != '') updateBody.password = password;
+    if(password && password != '') updateBody.password = await bcrypt.hash(password, 12);
 
     const profile = await Admin.findByIdAndUpdate({ '_id': req.params.id }, updateBody);
     if (!profile) return next(new AppError("User not found", 400));    
