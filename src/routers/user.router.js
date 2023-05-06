@@ -5,9 +5,9 @@ const router = express.Router();
 
 
 //Super admin and admin middlware
-router.use(adminAuth);
+// router.use(adminAuth);
 router.get('/profile/', userController.getAllProfile);
-router.get('/profile/pdf', userController.profilePdfGenerate);
+router.get('/profile/pdf/:id', userController.profilePdfGenerate);
 router.post('/', userController.add);
 router.get('/', userController.getAll);
 router.get('/:id', userController.getById);

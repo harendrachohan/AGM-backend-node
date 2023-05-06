@@ -1,10 +1,13 @@
 const moment = require('moment');
+// const fs = require('fs');
 const UsernameGenerator = require('username-generator');
 const User = require('..//models/user.model');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
 const LoginHistory = require('../models/loginHistory.model')
 const { AppError } = require('../utils/errorHandler');
+const appBaseUrl = process.env.APP_BASE_URL;
+
 
 
 
@@ -150,9 +153,9 @@ exports.delete = catchAsync(async (req, res, next) => {
 exports.getAllProfile = catchAsync(async (req, res, next) => {
 
     let filters = {};
-    const page = (req.query.page) ? parseInt(req.query.page) : 1;
-    const limit = (req.query.limit) ? parseInt(req.query.limit) : 10;
-    const skipIndex = (page - 1) * limit;
+    // const page = (req.query.page) ? parseInt(req.query.page) : 1;
+    // const limit = (req.query.limit) ? parseInt(req.query.limit) : 10;
+    // const skipIndex = (page - 1) * limit;
 
     if (req.query.gender) filters.gender = req.query.gender
     // if(req.query.age) filters.age = {$regex: req.query.age, $options:'i'}
@@ -167,17 +170,14 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
     }
 
 
-    let taskArray = [User.find(filters).sort({ "_id": -1 }).limit(limit).skip(skipIndex)];
-    taskArray.push(User.find(filters).count())
-
-    let [profile, total = null] = await Promise.all(taskArray);
+    let profile = await User.find(filters).sort({ "_id": -1 });
 
     return res.status(200).send({
         code: 200,
         message: "Get all profile successfully.",
         data: profile,
-        total: total
-    });
+        total: profile.length
+    }); 
 
 });
 
@@ -255,18 +255,28 @@ exports.getLoginHistory = catchAsync(async (req, res, next) => {
 
 
 exports.profilePdfGenerate = catchAsync(async (req, res, next) => {
+    
+    if (!req.params.id) return next(new AppError("user id is required.", 400));
+    
+    const profile = await User.findById(req.params.id);
+    if (!profile) return next(new AppError("No profile found.", 400));
+    // res.render("profile"); 
 
-    let filters = { deletedAt: null };
-
-    let taskArray = [LoginHistory.find(filters).sort({ "_id": -1 }).populate('adminId')];
-    taskArray.push(LoginHistory.find(filters).count())
-
-    let [profile, total = null] = await Promise.all(taskArray);
+    //   var html = fs.readFileSync('./src/views/profile.html', 'utf8');
+    //   var options = { format: 'Letter' };
+      
+    //   pdf.create(html, options).toFile('./businesscard.pdf', function(err, res) {
+    //     if (err) return console.log(err);
+    //     console.log(res); // { filename: '/app/businesscard.pdf' }
+    //   });
+    let pdfUrl = `${appBaseUrl}/dummy.pdf`
 
     return res.status(200).send({
         code: 200,
         message: "PDF generated successfully.",
-        data: {}
+        data: {
+            pdfUrl:pdfUrl
+        }
     });
 
 });
