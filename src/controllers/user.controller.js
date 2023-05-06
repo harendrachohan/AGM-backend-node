@@ -5,7 +5,10 @@ const User = require('..//models/user.model');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
 const LoginHistory = require('../models/loginHistory.model')
+const MasterField = require('../models/masterField.model')
 const { AppError } = require('../utils/errorHandler');
+const fs = require('fs')
+let conversion = require("phantom-html-to-pdf")();
 const appBaseUrl = process.env.APP_BASE_URL;
 
 
@@ -258,25 +261,116 @@ exports.profilePdfGenerate = catchAsync(async (req, res, next) => {
     
     if (!req.params.id) return next(new AppError("user id is required.", 400));
     
-    const profile = await User.findById(req.params.id);
+    let profile = await User.findById(req.params.id);
     if (!profile) return next(new AppError("No profile found.", 400));
-    // res.render("profile"); 
+    
+    const maskingData = await MasterField.find({deletedAt:null,masking:true}).select('name -_id');
 
-    //   var html = fs.readFileSync('./src/views/profile.html', 'utf8');
-    //   var options = { format: 'Letter' };
-      
-    //   pdf.create(html, options).toFile('./businesscard.pdf', function(err, res) {
-    //     if (err) return console.log(err);
-    //     console.log(res); // { filename: '/app/businesscard.pdf' }
-    //   });
-    let pdfUrl = `${appBaseUrl}/dummy.pdf`
+     maskingData.map((masking)=>{
+        profile[masking.name] = "**************";
+    })
+    profile.interests = profile.interests.toString();
 
-    return res.status(200).send({
-        code: 200,
-        message: "PDF generated successfully.",
-        data: {
-            pdfUrl:pdfUrl
-        }
+    let html = await createPdfHTML(profile);
+
+    
+
+    conversion({ html: html }, function(err, pdf) {
+        let fileName = `profile_${moment().valueOf()}.pdf`;            
+        let output = fs.createWriteStream(`./src/public/pdf/${fileName}`);
+        pdf.stream.pipe(output);
+        
+        let pdfUrl = `${appBaseUrl}/pdf/${fileName}`
+
+        return res.status(200).send({
+            code: 200,
+            message: "PDF generated successfully.",
+            data: {
+                pdfUrl:pdfUrl
+            }
+        });
     });
+    
 
 });
+
+function createPdfHTML(data){
+    return `
+    <html>
+    <style></style>
+    <body>
+        <h2 style="text-align: center;">Profile informations</h2>        
+    <table style="width:100%">
+        <tbody>
+            <tr>
+                <td>Name</td>
+                <td>:</td>
+                <td>${data.name|| ""}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>:</td>
+                <td>${data.email|| ""}</td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>:</td>
+                <td>${data.gender || ""}</td>
+            </tr>
+            <tr>
+                <td>Date Of Birth</td>
+                <td>:</td>
+                <td>${data.dateOfBirth || ""}</td>
+            </tr>            
+            <tr>
+                <td>Gotra</td>
+                <td>:</td>
+                <td>${data.gotra || ""}</td>
+            </tr>            
+            <tr>
+                <td>Education</td>
+                <td>:</td>
+                <td>${data.education || ""}</td>
+            </tr>             
+            <tr>
+                <td>Occupation</td>
+                <td>:</td>
+                <td>${data.occupation || ""}</td>
+            </tr>                    
+            <tr>
+                <td>Budget</td>
+                <td>:</td>
+                <td>${data.budget || ""}</td>
+            </tr>     
+                   
+            <tr>
+                <td>Interests</td>
+                <td>:</td>
+                <td>${data.interests || ""}</td>
+            </tr>            
+            <tr>
+                <td>Father Name</td>
+                <td>:</td>
+                <td>${data.fatherName || ""}</td>
+            </tr>            
+            <tr>
+                <td>Mother Name</td>
+                <td>:</td>
+                <td>${data.motherName || ""}</td>
+            </tr>           
+            <tr>
+                <td>Address</td>
+                <td>:</td>
+                <td>${data.address || ""}</td>
+            </tr>            
+            <tr>
+                <td>Phone</td>
+                <td>:</td>
+                <td>${data.phone || ""}</td>
+            </tr>
+        </tbody>
+    </table>
+    </body>
+</html>`;
+
+}
