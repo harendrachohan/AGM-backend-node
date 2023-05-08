@@ -160,8 +160,7 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
     // const limit = (req.query.limit) ? parseInt(req.query.limit) : 10;
     // const skipIndex = (page - 1) * limit;
 
-    if (req.query.gender) filters.gender = req.query.gender
-    // if(req.query.age) filters.age = {$regex: req.query.age, $options:'i'}
+    if (req.query.gender) filters.gender = req.query.gender;
     if (req.query.gotra) filters.gotra = { $regex: req.query.gotra, $options: 'i' }
     if (req.query.minBudget) filters.budget = { $lt: req.query.minBudget, $gt: req.query.maxBudget }
     if (req.query.age) {

@@ -39,7 +39,7 @@ exports.add = catchAsync(async(req, res, next) => {
 
     if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
 
-    let taskArray = [ MasterField.find(filters).sort({"_id":-1})];
+    let taskArray = [ MasterField.find(filters).sort({"preDefine":-1})];
         taskArray.push(MasterField.find(filters).count())
 
     let [masterFields, total = null] = await Promise.all(taskArray);
