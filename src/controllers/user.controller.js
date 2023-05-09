@@ -86,6 +86,28 @@ exports.getById = catchAsync(async (req, res, next) => {
 });
 
 /**
+* upload images
+* @param NA
+* @return json response
+*/
+exports.imageUpload = catchAsync(async (req, res, next) => {
+    
+    let fileName = req.file.filename;    
+    let fileUrl = `${appBaseUrl}/uploads/${fileName}`;
+    return res.status(200).send({
+        code: 200,
+        message: "Image uploaded.",
+        data: {
+            fileName:req.file.filename,
+            url: fileUrl
+        }
+
+    });
+
+});
+
+
+/**
  * Update User profile
  * @param req
  * @returns res

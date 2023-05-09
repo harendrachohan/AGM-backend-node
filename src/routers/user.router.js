@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('../controllers/user.controller');
 const {superAdminAuth, adminAuth, userAuth} = require('../middlewares/jwtMiddleware')
+const {imageUpload} = require('../middlewares/fileMiddleware')
 const router = express.Router();
 
 
@@ -8,10 +9,12 @@ const router = express.Router();
 router.use(adminAuth);
 router.get('/', userController.getAllProfile);
 router.get('/pdf/:id', userController.profilePdfGenerate);
-router.post('/', userController.add);
+router.post('/',userController.add);
 // router.get('/', userController.getAll);
+router.post('/upload',imageUpload.single('file'), userController.imageUpload);
 router.get('/:id', userController.getById);
 router.put('/:id', userController.update);
+
 
 router.use(superAdminAuth);
 router.delete('/:id', userController.delete);
