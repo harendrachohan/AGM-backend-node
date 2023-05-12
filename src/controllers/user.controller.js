@@ -184,7 +184,7 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
 
     if (req.query.gender) filters.gender = req.query.gender;
     if (req.query.gotra) filters.gotra = { $regex: req.query.gotra, $options: 'i' }
-    if (req.query.minBudget) filters.budget = { $lt: req.query.minBudget, $gt: req.query.maxBudget }
+    if (req.query.budget) filters.budget = req.query.budge
     if (req.query.age) {
         filters.age = { $lt: req.query.age, $gt: req.query.age }
     }
@@ -194,7 +194,30 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
     }
 
 
-    let profile = await User.find(filters).sort({ "_id": -1 });
+    let profiles = await User.find(filters).sort({ "_id": -1 });
+    let profile = profiles.map((profile) => {
+        
+    let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, budget, motherName, address, phone, whatsapp, masterFields, city } =profile;
+        let newObj = {}
+        newObj.name = name;
+        newObj.email = email;
+        newObj.gender = gender;
+        newObj.gotra = gotra;
+        newObj.education = education;
+        newObj.occupation = occupation;
+        newObj.interests = interests;
+        newObj.fatherName = fatherName;
+        newObj.motherName = motherName;
+        newObj.address = address;
+        newObj.city = city;
+        newObj.phone = phone;
+        newObj.whatsapp = whatsapp;
+        newObj.masterFields = masterFields;
+        newObj.budget = `${budget} lakh`;
+        newObj.dateOfBirth = moment(profile.dateOfBirth).format('DD MMM YYYY hh:mm A');
+        newObj.dob = moment(profile.dateOfBirth).format('DD MMM YYYY hh:mm A');
+        return  newObj;
+    })
 
     return res.status(200).send({
         code: 200,
