@@ -115,7 +115,7 @@ exports.imageUpload = catchAsync(async (req, res, next) => {
  */
 exports.update = catchAsync(async (req, res, next) => {
     
-    let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, motherName, address, phone, whatsapp, masterFields, city, pinCode, state, country,addressLine, budget } = req.body;;
+    let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, motherName, address, phone, whatsapp, masterFields, city, pinCode, state, country,addressLine, budget, profile, profileDoc } = req.body;;
 
     if (!req.params.id) return next(new AppError("user id is required.", 400));
 
@@ -140,17 +140,19 @@ exports.update = catchAsync(async (req, res, next) => {
         state,
         country,
         addressLine,
+        profile,
+        profileDoc,
         masterFields,
     };
 
     if (!req.params.id) return next(new AppError("user id is required.", 400));
-    const profile = await User.findByIdAndUpdate({ '_id': req.params.id }, updateBody);
+    const profileDate = await User.findByIdAndUpdate({ '_id': req.params.id }, updateBody);
 
-    if (!profile) return next(new AppError("User not found", 400));
+    if (!profileDate) return next(new AppError("User not found", 400));
     return res.status(200).send({
         code: 200,
         message: "profile updated successfully.",
-        data: profile
+        data: profileDate
     });
 })
 
@@ -195,11 +197,10 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
     }
     
     let profiles = await User.find(filters).sort({ "_id": -1 });
-    let profile = profiles.map((profile) => {
-        
-        let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, motherName, address, phone, whatsapp, masterFields, city, pinCode, state, country,addressLine, budget } =profile;
+    let profileData = profiles.map((item) => {        
+        let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, motherName, address, phone, whatsapp, masterFields, city, pinCode, state, country,addressLine, budget, profile, profileDoc } = item;
         let newObj = {}
-        newObj._id = profile._id;
+        newObj._id = item._id;
         newObj.name = name;
         newObj.email = email;
         newObj.gender = gender;
@@ -217,19 +218,20 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         newObj.state = state;
         newObj.country = country;
         newObj.addressLine = addressLine;
-        newObj.budget = budget;
+        newObj.profile = profile;
+        newObj.profileDoc = profileDoc;
         newObj.masterFields = masterFields;
         newObj.budget = `${budget} lakh`;
-        newObj.dateOfBirth = moment(profile.dateOfBirth).format('DD MMM YYYY hh:mm A');
-        newObj.dob = moment(profile.dateOfBirth).format('DD MMM YYYY hh:mm A');
+        newObj.dateOfBirth = moment(item.dateOfBirth).format('DD MMM YYYY hh:mm A');
+        newObj.dob = moment(item.dateOfBirth).format('DD MMM YYYY hh:mm A');
         return  newObj;
     })
 
     res.status(200).send({
         code: 200,
         message: "Get all profile successfully.",
-        data: profile,
-        total: profile.length
+        data: profileData,
+        total: profileData.length
     }); 
 
     let logData = {
