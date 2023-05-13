@@ -114,9 +114,8 @@ exports.imageUpload = catchAsync(async (req, res, next) => {
  * @returns res
  */
 exports.update = catchAsync(async (req, res, next) => {
-
-
-    let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, budget, motherName, address, phone, whatsapp, masterFields } = req.body;
+    
+    let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, motherName, address, phone, whatsapp, masterFields, city, pinCode, state, country,addressLine, budget } = req.body;;
 
     if (!req.params.id) return next(new AppError("user id is required.", 400));
 
@@ -136,6 +135,11 @@ exports.update = catchAsync(async (req, res, next) => {
         address,
         phone,
         whatsapp,
+        city,
+        pinCode,
+        state,
+        country,
+        addressLine,
         masterFields,
     };
 
@@ -193,7 +197,7 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
     let profiles = await User.find(filters).sort({ "_id": -1 });
     let profile = profiles.map((profile) => {
         
-        let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, budget, motherName, address, phone, whatsapp, masterFields, city } =profile;
+        let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, motherName, address, phone, whatsapp, masterFields, city, pinCode, state, country,addressLine, budget } =profile;
         let newObj = {}
         newObj._id = profile._id;
         newObj.name = name;
@@ -209,6 +213,11 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         newObj.city = city;
         newObj.phone = phone;
         newObj.whatsapp = whatsapp;
+        newObj.pinCode = pinCode;
+        newObj.state = state;
+        newObj.country = country;
+        newObj.addressLine = addressLine;
+        newObj.budget = budget;
         newObj.masterFields = masterFields;
         newObj.budget = `${budget} lakh`;
         newObj.dateOfBirth = moment(profile.dateOfBirth).format('DD MMM YYYY hh:mm A');
