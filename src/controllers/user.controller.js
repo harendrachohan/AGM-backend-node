@@ -2,6 +2,7 @@ const moment = require('moment');
 // const fs = require('fs');
 const UsernameGenerator = require('username-generator');
 const User = require('..//models/user.model');
+const Log = require('..//models/log.model');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
 const LoginHistory = require('../models/loginHistory.model')
@@ -178,10 +179,6 @@ exports.delete = catchAsync(async (req, res, next) => {
 exports.getAllProfile = catchAsync(async (req, res, next) => {
 
     let filters = {};
-    // const page = (req.query.page) ? parseInt(req.query.page) : 1;
-    // const limit = (req.query.limit) ? parseInt(req.query.limit) : 10;
-    // const skipIndex = (page - 1) * limit;
-
     if (req.query.gender) filters.gender = req.query.gender;
     if (req.query.gotra) filters.gotra = { $regex: req.query.gotra, $options: 'i' }
     if (req.query.budget) filters.budget = req.query.budge
@@ -192,12 +189,11 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         let interests = req.query.interests.split(',');
         filters.interests = { $in: interests }
     }
-
-
+    
     let profiles = await User.find(filters).sort({ "_id": -1 });
     let profile = profiles.map((profile) => {
         
-    let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, budget, motherName, address, phone, whatsapp, masterFields, city } =profile;
+        let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, budget, motherName, address, phone, whatsapp, masterFields, city } =profile;
         let newObj = {}
         newObj.name = name;
         newObj.email = email;
@@ -219,12 +215,21 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         return  newObj;
     })
 
-    return res.status(200).send({
+    res.status(200).send({
         code: 200,
         message: "Get all profile successfully.",
         data: profile,
         total: profile.length
     }); 
+
+    let logData = {
+        adminId: req.user._id,
+        title: "profileSearch",
+        description: "profileSearch",
+        logData: JSON.stringify(filters),
+
+    }
+    await Log.create(logData);
 
 });
 
@@ -326,13 +331,22 @@ exports.profilePdfGenerate = catchAsync(async (req, res, next) => {
         
         let pdfUrl = `${appBaseUrl}/pdf/${fileName}`
 
-        return res.status(200).send({
+        res.status(200).send({
             code: 200,
             message: "PDF generated successfully.",
             data: {
                 pdfUrl:pdfUrl
             }
         });
+
+        let logData = {
+            adminId: req.user._id,
+            title: "pdfGenerated",
+            description: "pdfUrl",
+            logData: pdfUrl
+        }
+        Log.create(logData);
+
     });
     
 
