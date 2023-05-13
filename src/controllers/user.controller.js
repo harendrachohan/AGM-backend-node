@@ -186,7 +186,7 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         filters.age = { $lt: req.query.age, $gt: req.query.age }
     }
     if (req.query.interests) {
-        let interests = req.query.interests.split(',');
+        let interests = req.query.interests;
         filters.interests = { $in: interests }
     }
     
@@ -195,6 +195,7 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         
         let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, budget, motherName, address, phone, whatsapp, masterFields, city } =profile;
         let newObj = {}
+        newObj._id = profile._id;
         newObj.name = name;
         newObj.email = email;
         newObj.gender = gender;
@@ -321,8 +322,6 @@ exports.profilePdfGenerate = catchAsync(async (req, res, next) => {
     profile.interests = profile.interests.toString();
 
     let html = await createPdfHTML(profile);
-
-    
 
     conversion({ html: html }, function(err, pdf) {
         let fileName = `profile_${moment().valueOf()}.pdf`;            
