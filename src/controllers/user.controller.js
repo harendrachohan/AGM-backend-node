@@ -222,7 +222,7 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         newObj.profileDoc = profileDoc;
         newObj.masterFields = masterFields;
         newObj.budget = `${budget}`;
-        newObj.dateOfBirth = moment(item.dateOfBirth).format('DD MMM YYYY hh:mm A');
+        newObj.dateOfBirth =item.dateOfBirt;
         newObj.dob = moment(item.dateOfBirth).format('DD MMM YYYY hh:mm A');
         return  newObj;
     })
