@@ -184,7 +184,7 @@ exports.delete = catchAsync(async (req, res, next) => {
  */
 exports.getAllProfile = catchAsync(async (req, res, next) => {
 
-    let filters = {};
+    let filters = {deletedAt:null};
     if (req.query.gender) filters.gender = req.query.gender;
     if (req.query.gotra) filters.gotra = { $regex: req.query.gotra, $options: 'i' }
     if (req.query.budget) filters.budget = req.query.budge
