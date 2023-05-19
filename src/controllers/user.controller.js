@@ -255,8 +255,8 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
  */
 exports.report = catchAsync(async (req, res, next) => {
 
-    let malefilters = { gender: "male" };
-    let femalefilters = { gender: "female" };
+    let malefilters = { gender: "male", deletedAt:null };
+    let femalefilters = { gender: "female", deletedAt:null };
     let totalsharedCount = 0;
     let pipleline = [{
         $group: {
@@ -268,7 +268,7 @@ exports.report = catchAsync(async (req, res, next) => {
     let taskArray = [
         User.find(malefilters).countDocuments(),
         User.find(femalefilters).countDocuments(),
-        User.find({}).countDocuments(),
+        User.find({deletedAt:null}).countDocuments(),
         User.aggregate(pipleline)
     ];
 
@@ -321,18 +321,21 @@ exports.getLoginHistory = catchAsync(async (req, res, next) => {
 exports.profilePdfGenerate = catchAsync(async (req, res, next) => {
     
     if (!req.params.id) return next(new AppError("user id is required.", 400));
+    let userIds = req.params.id.split(',')
     
-    let profile = await User.findById(req.params.id);
-    if (!profile) return next(new AppError("No profile found.", 400));
+    let profiles = await User.find({_id:{$in:userIds}});
+    if (profiles.length < 1) return next(new AppError("No profile found.", 400));
     
     const maskingData = await MasterField.find({deletedAt:null,masking:true}).select('name -_id');
 
-     maskingData.map((masking)=>{
-        profile[masking.name] = "**************";
-    })
-    profile.interests = profile.interests.toString();
+    profiles.map((profile) =>{
+        maskingData.map((masking)=> {
+            profile[masking.name] = "**************";
+        })
+        profile.interests = profile.interests.toString();
+    });
 
-    let html = await createPdfHTML(profile);
+    let html = await createPdfHTML(profiles);
 
     conversion({ html: html }, function(err, pdf) {
         let fileName = `profile_${moment().valueOf()}.pdf`;            
@@ -362,82 +365,89 @@ exports.profilePdfGenerate = catchAsync(async (req, res, next) => {
 
 });
 
-function createPdfHTML(data){
+function createPdfHTML(profileData){
+    let profileTable ='';
+    profileData.map((data)=>{
+        profileTable= `${profileTable}
+            <hr></hr>
+            <table style="width:100%">
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>:</td>
+                        <td>${data.name|| ""}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>:</td>
+                        <td>${data.email|| ""}</td>
+                    </tr>
+                    <tr>
+                        <td>Gender</td>
+                        <td>:</td>
+                        <td>${data.gender || ""}</td>
+                    </tr>
+                    <tr>
+                        <td>Date Of Birth</td>
+                        <td>:</td>
+                        <td>${data.dateOfBirth || ""}</td>
+                    </tr>            
+                    <tr>
+                        <td>Gotra</td>
+                        <td>:</td>
+                        <td>${data.gotra || ""}</td>
+                    </tr>            
+                    <tr>
+                        <td>Education</td>
+                        <td>:</td>
+                        <td>${data.education || ""}</td>
+                    </tr>             
+                    <tr>
+                        <td>Occupation</td>
+                        <td>:</td>
+                        <td>${data.occupation || ""}</td>
+                    </tr>                    
+                    <tr>
+                        <td>Budget</td>
+                        <td>:</td>
+                        <td>${data.budget || ""}</td>
+                    </tr>     
+                        
+                    <tr>
+                        <td>Interests</td>
+                        <td>:</td>
+                        <td>${data.interests || ""}</td>
+                    </tr>            
+                    <tr>
+                        <td>Father Name</td>
+                        <td>:</td>
+                        <td>${data.fatherName || ""}</td>
+                    </tr>            
+                    <tr>
+                        <td>Mother Name</td>
+                        <td>:</td>
+                        <td>${data.motherName || ""}</td>
+                    </tr>           
+                    <tr>
+                        <td>Address</td>
+                        <td>:</td>
+                        <td>${data.address || ""}</td>
+                    </tr>            
+                    <tr>
+                        <td>Phone</td>
+                        <td>:</td>
+                        <td>${data.phone || ""}</td>
+                    </tr>
+                </tbody>
+            </table>`;
+    })
+
     return `
     <html>
     <style></style>
     <body>
-        <h2 style="text-align: center;">Profile informations</h2>        
-    <table style="width:100%">
-        <tbody>
-            <tr>
-                <td>Name</td>
-                <td>:</td>
-                <td>${data.name|| ""}</td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td>:</td>
-                <td>${data.email|| ""}</td>
-            </tr>
-            <tr>
-                <td>Gender</td>
-                <td>:</td>
-                <td>${data.gender || ""}</td>
-            </tr>
-            <tr>
-                <td>Date Of Birth</td>
-                <td>:</td>
-                <td>${data.dateOfBirth || ""}</td>
-            </tr>            
-            <tr>
-                <td>Gotra</td>
-                <td>:</td>
-                <td>${data.gotra || ""}</td>
-            </tr>            
-            <tr>
-                <td>Education</td>
-                <td>:</td>
-                <td>${data.education || ""}</td>
-            </tr>             
-            <tr>
-                <td>Occupation</td>
-                <td>:</td>
-                <td>${data.occupation || ""}</td>
-            </tr>                    
-            <tr>
-                <td>Budget</td>
-                <td>:</td>
-                <td>${data.budget || ""}</td>
-            </tr>     
-                   
-            <tr>
-                <td>Interests</td>
-                <td>:</td>
-                <td>${data.interests || ""}</td>
-            </tr>            
-            <tr>
-                <td>Father Name</td>
-                <td>:</td>
-                <td>${data.fatherName || ""}</td>
-            </tr>            
-            <tr>
-                <td>Mother Name</td>
-                <td>:</td>
-                <td>${data.motherName || ""}</td>
-            </tr>           
-            <tr>
-                <td>Address</td>
-                <td>:</td>
-                <td>${data.address || ""}</td>
-            </tr>            
-            <tr>
-                <td>Phone</td>
-                <td>:</td>
-                <td>${data.phone || ""}</td>
-            </tr>
-        </tbody>
-    </table>
+        <h2 style="text-align: center;">Profile informations</h2>
+       ${profileTable}            
     </body>
 </html>`;
 
