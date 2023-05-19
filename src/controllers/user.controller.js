@@ -187,14 +187,22 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
     let filters = {deletedAt:null};
     if (req.query.gender) filters.gender = req.query.gender;
     if (req.query.gotra) filters.gotra = { $regex: req.query.gotra, $options: 'i' }
-    if (req.query.budget) filters.budget = req.query.budge
+    if (req.query.budget) filters.budget = req.query.budget;
+    if (req.query.occupation) filters.occupation = req.query.occupation;
+    if (req.query.height) filters.height = req.query.height;
+    if (req.query.isManglik) filters.isManglik = req.query.isManglik;
+    
     if (req.query.age) {
-        filters.age = { $lt: req.query.age, $gt: req.query.age }
+        let age = Number(req.query.age)+1;
+        let startDate = moment().subtract(req.query.age, 'years').calendar();
+        let endDate = moment().subtract(age, 'years').calendar();
+        filters.dateOfBirth = { $lt: startDate, $gt: endDate }
     }
     if (req.query.interests) {
         let interests = req.query.interests;
         filters.interests = { $in: interests }
     }
+    console.log("filters:",filters);
     
     let profiles = await User.find(filters).sort({ "_id": -1 });
     let profileData = profiles.map((item) => {        

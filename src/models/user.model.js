@@ -120,6 +120,13 @@ const usersSchema = new Schema({
     pinCode: { 
         type: String,
     },
+    isManglik: { 
+        type: Boolean,
+    },    
+    height: { 
+        type: Number,
+    },
+    
     masterFields: {
         type: [masterFieldsSchema]
     },
