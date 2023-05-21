@@ -10,6 +10,8 @@ router.use(adminAuth);
 router.get('/', userController.getAllProfile);
 router.get('/pdf/:id', userController.profilePdfGenerate);
 router.post('/',userController.add);
+router.get('/search-log/',userController.getProfileSearchLogs);
+
 // router.get('/', userController.getAll);
 router.post('/upload',imageUpload.single('file'), userController.imageUpload);
 router.get('/:id', userController.getById);

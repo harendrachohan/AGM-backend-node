@@ -202,7 +202,6 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         let interests = req.query.interests;
         filters.interests = { $in: interests }
     }
-    console.log("filters:",filters);
     
     let profiles = await User.find(filters).sort({ "_id": -1 });
     let profileData = profiles.map((item) => {        
@@ -254,6 +253,27 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
 });
 
 
+/**
+ * Get Previews Serach Logs 
+ * @param NA
+ * @return json response
+ */
+exports.getProfileSearchLogs = catchAsync(async (req, res, next) => {
+
+    let filters = {
+        adminId: req.user._id,
+        title: "profileSearch",
+    };
+    let logs = await Log.find(filters).sort({ "_id": -1 });   
+
+    return res.status(200).send({
+        code: 200,
+        message: "Get profile Search logs successfully.",
+        data: logs,
+        total: logs.length
+    }); 
+
+});
 
 
 /**
