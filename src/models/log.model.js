@@ -23,7 +23,7 @@ const logsSchema = new Schema({
         default: null,
     },        
     createdAt: {
-        type: Number,
+        type: Date,
     }
 },
 { 
