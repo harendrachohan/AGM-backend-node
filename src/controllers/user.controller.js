@@ -183,6 +183,7 @@ exports.delete = catchAsync(async (req, res, next) => {
  * @return json response
  */
 exports.getAllProfile = catchAsync(async (req, res, next) => {
+    let filterLog = req.query;
 
     let filters = {deletedAt:null};
     if (req.query.gender) filters.gender = req.query.gender;
@@ -245,7 +246,7 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         adminId: req.user._id,
         title: "profileSearch",
         description: "profileSearch",
-        logData: JSON.stringify(filters),
+        logData: JSON.stringify(filterLog),
 
     }
     await Log.create(logData);
