@@ -115,7 +115,7 @@ exports.imageUpload = catchAsync(async (req, res, next) => {
  */
 exports.update = catchAsync(async (req, res, next) => {
     
-    let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, motherName, address, phone, whatsapp, masterFields, city, pinCode, state, country,addressLine, budget, profile, profileDoc } = req.body;;
+    let { name, email, password, gender, dateOfBirth, gotra, education, occupation, interests, fatherName, motherName, address, phone, whatsapp, masterFields, city, pinCode, state, country,addressLine, budget, profile, profileDoc } = req.body;
 
     if (!req.params.id) return next(new AppError("user id is required.", 400));
 
@@ -241,15 +241,16 @@ exports.getAllProfile = catchAsync(async (req, res, next) => {
         data: profileData,
         total: profileData.length
     }); 
+    if(filterLog.length){
+        let logData = {
+            adminId: req.user._id,
+            title: "profileSearch",
+            description: "profileSearch",
+            logData: JSON.stringify(filterLog),
 
-    let logData = {
-        adminId: req.user._id,
-        title: "profileSearch",
-        description: "profileSearch",
-        logData: JSON.stringify(filterLog),
-
+        }
+        await Log.create(logData);
     }
-    await Log.create(logData);
 
 });
 
