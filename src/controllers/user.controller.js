@@ -62,9 +62,8 @@ exports.getAll = catchAsync(async (req, res, next) => {
     return res.status(200).send({
         code: 200,
         message: "Get all profile successfully.",
-        data: profile,
+        data: {profile,viewership},
         total: total,
-        viewership:viewership
     });
 
 });
@@ -344,9 +343,10 @@ exports.getLoginHistory = catchAsync(async (req, res, next) => {
     return res.status(200).send({
         code: 200,
         message: "Get all login History successfully.",
-        data: profile,
-        total: total,
-        activityReport:pdfReport
+        data:{
+             profile, 
+            activityReport:pdfReport
+    }
     });
 
 });
