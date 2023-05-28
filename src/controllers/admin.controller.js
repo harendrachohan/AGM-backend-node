@@ -53,7 +53,7 @@ exports.add = catchAsync(async(req, res, next) => {
     if(req.query.name) filters.name = {$regex: req.query.name, $options:'i'}
 
     // let taskArray = [ Admin.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
-    let taskArray = [ Admin.find(filters).sort({"_id":-1})];
+    let taskArray = [ Admin.find(filters).sort({"createdAt":-1})];
         taskArray.push(Admin.find(filters).count())
 
     let [profile, total = null] = await Promise.all(taskArray);
