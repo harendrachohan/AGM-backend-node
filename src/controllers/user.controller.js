@@ -140,10 +140,10 @@ exports.update = catchAsync(async (req, res, next) => {
         state,
         country,
         addressLine,
-        profile,
-        profileDoc,
         masterFields,
     };
+    if(profileDoc && profileDoc.fileName.length > 0) updateBody.profileDoc = profileDoc;
+    if(profile  && profile.fileName.length > 0 ) updateBody.profile = profile;
 
     if (!req.params.id) return next(new AppError("user id is required.", 400));
     const profileDate = await User.findByIdAndUpdate({ '_id': req.params.id }, updateBody);
