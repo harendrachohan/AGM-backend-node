@@ -336,7 +336,7 @@ exports.getLoginHistory = catchAsync(async (req, res, next) => {
     let taskArray = [
         LoginHistory.find(filters).sort({ "_id": -1 }).populate('adminId'),
         LoginHistory.find(filters).count(),
-        Log.find({title: "pdfGenerated",}).sort({ "_id": -1 }).populate('adminId'),
+        Log.find({}).sort({ "_id": -1 }).populate('adminId')
     ];
 
     let [profile, total = null, pdfReport] = await Promise.all(taskArray);
