@@ -36,6 +36,9 @@ const adminSchema = new Schema({
     },        
     modules: { 
         type: Array,        
+    },          
+    viewership: { 
+        type: Array,        
     },    
     lastLogin: {
         type: Number,

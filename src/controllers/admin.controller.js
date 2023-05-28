@@ -11,7 +11,7 @@ const { AppError } = require('../utils/errorHandler')
  * @return json response
  */
 exports.add = catchAsync(async(req, res, next) => {
-    let {name, phone, email, password, modules, permission} = req.body;
+    let {name, phone, email, password, permission, viewership} = req.body;
 
     const userData = await Admin.findOne({ email: email, deletedAt:null});
     if(userData) return next(new AppError("email already exist", 400));
@@ -22,8 +22,8 @@ exports.add = catchAsync(async(req, res, next) => {
         email,
         phone,
         password,
-        modules,
-        permission
+        permission,
+        viewership
     }
     
     const count = await Admin.findOne({}).countDocuments();
@@ -92,13 +92,13 @@ exports.getById = catchAsync(async(req, res, next) => {
  */
  exports.update = catchAsync(async (req, res, next) => {
 
-    let {name, email, password, modules, permission} = req.body;
+    let {name, email, password, viewership, permission} = req.body;
     if(!req.params.id) return next(new AppError("user id is required.", 400));   
     
     let updateBody = {
         name,
         email,
-        modules,
+        viewership,
         permission
     }
 
