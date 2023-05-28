@@ -3,6 +3,7 @@ const moment = require('moment');
 const UsernameGenerator = require('username-generator');
 const User = require('..//models/user.model');
 const Log = require('..//models/log.model');
+const Admin = require('..//models/admin.model');
 const catchAsync = require('../utils/catchAsync');
 // const AppError = require('../utils/appError');
 const LoginHistory = require('../models/loginHistory.model')
@@ -50,18 +51,20 @@ exports.getAll = catchAsync(async (req, res, next) => {
     const skipIndex = (page - 1) * limit;
 
     if (req.query.name) filters.name = { $regex: req.query.name, $options: 'i' }
-
     // let taskArray = [ User.find(filters).sort({"_id":-1}).limit(limit).skip(skipIndex)];
     let taskArray = [User.find(filters).sort({ "_id": -1 })];
-    taskArray.push(User.find(filters).count())
+    taskArray.push(User.find(filters).count(),
+    Admin.findById(req.user.id).select('viewership -_id')
+    )
 
-    let [profile, total = null] = await Promise.all(taskArray);
+    let [profile, total = null,viewership =[]] = await Promise.all(taskArray);
 
     return res.status(200).send({
         code: 200,
         message: "Get all profile successfully.",
         data: profile,
-        total: total
+        total: total,
+        viewership:viewership
     });
 
 });
@@ -330,16 +333,20 @@ exports.getLoginHistory = catchAsync(async (req, res, next) => {
 
     if (req.query.name) filters.name = { $regex: req.query.name, $options: 'i' }
 
-    let taskArray = [LoginHistory.find(filters).sort({ "_id": -1 }).populate('adminId')];
-    taskArray.push(LoginHistory.find(filters).count())
+    let taskArray = [
+        LoginHistory.find(filters).sort({ "_id": -1 }).populate('adminId'),
+        LoginHistory.find(filters).count(),
+        Log.find({title: "pdfGenerated",}).sort({ "_id": -1 }).populate('adminId'),
+    ];
 
-    let [profile, total = null] = await Promise.all(taskArray);
+    let [profile, total = null, pdfReport] = await Promise.all(taskArray);
 
     return res.status(200).send({
         code: 200,
         message: "Get all login History successfully.",
         data: profile,
-        total: total
+        total: total,
+        activityReport:pdfReport
     });
 
 });
