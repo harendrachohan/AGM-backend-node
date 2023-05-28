@@ -21,10 +21,10 @@ exports.imageUpload = multer({
     fileSize: 1000000 // 1000000 Bytes = 1 MB
   },
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {       
-      req.fileValidationError = 'Only image files are allowed!';
-      return cb(new Error('Only image files are allowed!'), false);
-     }
+    // if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {       
+    //   req.fileValidationError = 'Only image files are allowed!';
+    //   return cb(new Error('Only image files are allowed!'), false);
+    //  }
    cb(undefined, true)
   }
   
