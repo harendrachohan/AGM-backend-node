@@ -62,8 +62,9 @@ exports.getAll = catchAsync(async (req, res, next) => {
     return res.status(200).send({
         code: 200,
         message: "Get all profile successfully.",
-        data: {profile,viewership},
+        data: profile,
         total: total,
+        viewership
     });
 
 });
